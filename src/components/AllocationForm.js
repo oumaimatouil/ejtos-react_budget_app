@@ -1,12 +1,14 @@
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
+import { FaPlusCircle, FaMinusCircle} from 'react-icons/fa'; // Import icon components
 
 const AllocationForm = (props) => {
-    const { dispatch,remaining  } = useContext(AppContext);
+    const { dispatch,remaining,currency  } = useContext(AppContext);
 
     const [name, setName] = useState('');
     const [cost, setCost] = useState('');
     const [action, setAction] = useState('');
+    const [error,setError] = useState('');
 
     const submitEvent = () => {
 
@@ -61,12 +63,22 @@ const AllocationForm = (props) => {
 
                     <input
                         required='required'
-                        type='number'
+                        type='text' //change the input to text type
                         id='cost'
                         value={cost}
                         style={{ marginLeft: '2rem' , size: 10}}
-                        onChange={(event) => setCost(event.target.value)}>
-                        </input>
+                        onChange={(event) => {
+                        //use regular expression to allow only numeric input
+                        const input = event.target.value;
+                        if (/^\d*\.?\d*$/.test(input)) {
+                            setCost(input);
+                        } else {
+                            setError('Please enter a valid number.');
+                        }
+                    }}
+                    />
+
+                    <span className="input-group-text">{currency}</span>
 
                     <button className="btn btn-primary" onClick={submitEvent} style={{ marginLeft: '2rem' }}>
                         Save
